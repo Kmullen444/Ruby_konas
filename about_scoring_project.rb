@@ -31,6 +31,47 @@ require File.expand_path(File.dirname(__FILE__) + '/neo')
 
 def score(dice)
   # You need to write this method
+  #
+  # set of ones = 1000 points
+  # set of three numbers other than one = 500 points
+  # 1 not in set of three = 100
+  # 5 not in set of three = 50 points
+  # numbers that are in a set of 3 but aren't 1 or 5 are that number times
+  # 100 ie([5,5,5] score = 500 )
+  score = 0
+  return 0 if dice.empty?
+
+  counted = die_count(dice)
+
+  #iterates through each key and value adding the appropriate amount to
+  #the score
+
+  counted.each do |k, v|
+    if k == 1 && v >= 3
+      score += 1000
+      if v > 3
+        (v - 3).times { score += 100}
+      end
+    elsif k == 5 && v >= 3
+      score += 500 
+      if v > 3
+        (v - 3).times { score += 50 }
+      end
+    elsif k == 1 && v < 3
+      v.times { score += 100 }
+    elsif k == 5 && v < 3
+      v.times { score += 50 }
+    elsif (k != 1 && k !=5) && v == 3
+      score += k * 100
+    end
+  end
+  score
+end
+
+def die_count(dice)
+  score_hash = Hash.new(0) 
+  dice.each { |die| score_hash[die] += 1}
+  score_hash
 end
 
 class AboutScoringProject < Neo::Koan
